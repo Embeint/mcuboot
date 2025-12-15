@@ -730,6 +730,16 @@ boot_validated_swap_type(struct boot_loader_state *state,
     int swap_type;
     FIH_DECLARE(fih_rc, FIH_FAILURE);
 
+#ifdef MCUBOOT_UPGRADE_ONLY_AUTOMATIC
+    /* Don't check the swap status, just validate the secondary slot */
+    FIH_CALL(boot_validate_slot, fih_rc, state, BOOT_SLOT_SECONDARY, bs, BOOT_SWAP_TYPE_PERM);
+    if (FIH_NOT_EQ(fih_rc, FIH_SUCCESS)) {
+        swap_type = BOOT_SWAP_TYPE_NONE;
+    } else {
+        swap_type = BOOT_SWAP_TYPE_PERM;
+    }
+    return swap_type;
+#else
     swap_type = boot_swap_type_multi(BOOT_CURR_IMG(state));
     if (BOOT_IS_UPGRADE(swap_type)) {
         /* Boot loader wants to switch to the secondary slot.
@@ -746,6 +756,7 @@ boot_validated_swap_type(struct boot_loader_state *state,
     }
 
     return swap_type;
+#endif
 }
 #endif
 

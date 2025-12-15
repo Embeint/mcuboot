@@ -1062,6 +1062,17 @@ config MCUBOOT_HW_DOWNGRADE_PREVENTION_COUNTER_LIMITED
 
 endchoice
 
+config MCUBOOT_UPGRADE_ONLY_AUTOMATIC
+	bool "Automatically upgrade to valid secondary images"
+	depends on BOOT_UPGRADE_ONLY
+	depends on MCUBOOT_DOWNGRADE_PREVENTION
+	help
+	  Automatically upgrade to valid images present in the secondary image
+	  slot. This provides a simple mechanism to perform an OTA upgrade when
+	  the secondary slot is on a flash device with a very large write alignment.
+	  It is not otherwise possible to set the SWAP status from application code
+	  with the standard MCUBoot utility functions.
+
 config MCUBOOT_UUID_VID
 	bool "Expect vendor unique identifier in image's TLV"
 	help
